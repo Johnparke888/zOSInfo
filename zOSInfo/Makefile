@@ -1,0 +1,34 @@
+
+CXX_PROGX=zosInfo
+
+PDMOS:=$(shell uname -s)
+Machine:=$(shell uname -m)
+$(info $(PDMOS))
+$(info $(Machine))
+
+
+# *******************************************************
+# ************************ USS **************************
+# *******************************************************
+
+CXXFLAGS+=-O2 -std=gnu++20 -fzos-le-char-mode=ascii $(INCLUDE)
+CC=/usr/lpp/IBM/cnw/openxl/bin/ibm-clang64
+CXX=/usr/lpp/IBM/cnw/openxl/bin/ibm-clang++64
+LD=/usr/lpp/IBM/cnw/openxl/bin/ibm-clang++64
+
+INCLUDE+=-I. -I/usr/local/include  -I/usr/include 
+
+
+CXXSOURCES = zosInfo.cpp
+CXXOBJECTS = $(CXXSOURCES:.cpp=.o)  
+
+
+$(CXX_PROGX): $(CXXOBJECTS)
+	$(CXX) -o $@ $(CXXOBJECTS) 
+
+all:: clean $(CXX_PROGX) 
+	
+clean::
+	$(RM) $(CXXOBJECTS) $(CXX_PROGX) 
+
+ship:: all
