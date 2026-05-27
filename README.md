@@ -182,8 +182,7 @@ gmake --file=Makefile-Test
 
 ## Compiler
 
-* IBM Open XL C/C++ 2.1 for z/OS
-* Clang version 18.1.0
+* IBM Open XL C/C++ 2.1 for z/OS Clang version 18.1.0
 
 ---
 
