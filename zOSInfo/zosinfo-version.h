@@ -1,0 +1,8 @@
+#pragma once
+
+#define ZOSINFO_VERSION_MAJOR 1
+#define ZOSINFO_VERSION_MINOR 0
+#define ZOSINFO_VERSION_PATCH 0
+#define ZOSINFO_VERSION_STRING "1.0.0"
+
+
