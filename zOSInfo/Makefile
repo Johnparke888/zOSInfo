@@ -16,7 +16,7 @@ CC  ?= ibm-clang64
 CXX ?= ibm-clang++64
 AR  ?= ar
 
-INCLUDE += -I. -I/usr/local/include -I/usr/include
+INCLUDE += -I. -I./include -I/usr/local/include -I/usr/include
 CXXFLAGS += -O2 -std=gnu++20 -fzos-le-char-mode=ascii $(INCLUDE)
 
 # Install layout. zopen passes DESTDIR (the prefix, e.g. .../prod/zosinfo).
