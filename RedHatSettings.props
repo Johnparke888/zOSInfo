@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?> <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserDefinedProperties">
+    <GccMajorVersion>15</GccMajorVersion>
+    <GccMinorVersion>2.0</GccMinorVersion>
+	<GccVersion>$(GccMajorVersion).$(GccMinorVersion)</GccVersion>
+    <BaseInstallDir>/usr</BaseInstallDir>
+    <ProjectBaseDir>/usr3/zOSInfo</ProjectBaseDir>
+    <GccLibPath>$(BaseInstallDir)/local/gcc-$(GccVersion)/lib/gcc/x86_64-pc-linux-gnu/$(GccMajorVersion)/include/c++</GccLibPath>
+  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <ConfigurationType>Makefile</ConfigurationType>
+    <RemoteCopyIncludeDirectories>/usr/local/gcc-$(GccVersion)/lib/gcc/x86_64-pc-linux-gnu/$(GccMajorVersion)/include;/usr/local/gcc-$(GccVersion)/lib/gcc/x86_64-pc-linux-gnu/$(GccMajorVersion)/include/c++;/usr/local/include;/usr/local/include/botan-3;/usr/local/include/Poco;/usr/local/include/hwloc;/usr/include;/usr/local/include/concurrentqueue/moodycamel;/usr/local/include/libcpuid</RemoteCopyIncludeDirectories>
+    <RemoteRootDir>$(ProjectBaseDir)</RemoteRootDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <NMakePreprocessorDefinitions>__cplusplus=202303L;__unix__=1;__linux__=1;__unix=1;__GNUC__=1;</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>$(GccLibPath);$(BaseInstallDir)/include;$(BaseInstallDir)/local/include;$(ProjectBaseDir)/zOSInfo/include;;</NMakeIncludeSearchPath>
+    <RemoteCppCompileToolExe>$(BaseInstallDir)/local/gcc-$(GccVersion)/bin/g++</RemoteCppCompileToolExe>
+	 <RemoteCCompileToolExe>$(BaseInstallDir)/local/gcc-$(GccVersion)/bin/gcc</RemoteCCompileToolExe>
+  </PropertyGroup>
+  <!-- Add other configuration properties as needed -->
+</Project>

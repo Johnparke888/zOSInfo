@@ -3,7 +3,7 @@
  *
  * Retrieve information from z/OS control blocks pertaining to product and sysplex information.
  *
- *     PSA (addr 0)                  -> FLCCVT at offset x'10' -> CVT
+ *     PSA (addr 0) -> FLCCVT at offset x'10' -> CVT
  *
  *
  * Notes:
@@ -13,14 +13,11 @@
  *     __ptr32 the compiler would sign-extend the 31-bit value or
  *     read 8 bytes instead of 4 and you would chase garbage.
  *
- *
  *   - String fields in these blocks are EBCDIC. We convert any input_field
  *     we want to display with __e2a_l() (a no-op on EBCDIC builds;
  *     a real conversion on ASCII builds).
  */
-#ifndef __MVS__
-#define __ptr32
-#endif
+
 #include "psa.h"
 #include "cvt.h"
 #include "ecvt.h"
@@ -52,6 +49,7 @@
 #define psa_length 0x1000
 #define rce_length 0x0580
 #define rmct_length 0x0400
+
 // Control block eye-catchers (acronyms) in EBCDIC. These are not necessarily at the start of the
 // block, so we will check them at their documented offsets.
 
@@ -62,18 +60,22 @@ static const unsigned char CCT_ACRONYM[4] = {0xC3, 0xC3, 0xE3, 0x40};
 static const unsigned char PCCA_ACRONYM[4] = {0xD7, 0xC3, 0xC3, 0xC1};
 static const unsigned char RCE_ACRONYM[4] = {0xD9, 0xC3, 0xC5, 0x40};
 static const unsigned char CSD_ACRONYM[4] = {0xC3, 0xE2, 0xC4, 0x40};
+
 /*
  *  Helper: copy a fixed-length EBCDIC input_field into a NUL-terminated
  *  buffer, convert to ASCII for display, and trim trailing blanks.
  *  "input_field" need not be NUL-terminated; "field_length" is its declared length.
  *
  */
+
 void ebcdic_field_to_ascii (const unsigned char *input_field, std::size_t field_length, char *output_buffer, std::size_t output_buffer_size)
 {
+
    if (output_buffer_size == 0)
    {
       return;
    }
+
    std::size_t bytes_to_copy = (field_length < output_buffer_size - 1) ? field_length : output_buffer_size - 1;
    std::memcpy (output_buffer, input_field, bytes_to_copy);
    output_buffer[bytes_to_copy] = '\0';
@@ -83,6 +85,7 @@ void ebcdic_field_to_ascii (const unsigned char *input_field, std::size_t field_
     * If the source file is compiled in EBCDIC mode, __e2a_l is still
     * safe to call; the result for a pure-EBCDIC build will look
     * unchanged because stdio is also EBCDIC. */
+
    __e2a_l (output_buffer, bytes_to_copy);
 #endif
 
@@ -109,21 +112,24 @@ void ebcdic_field_to_ascii (const unsigned char *input_field, std::size_t field_
 
    // Trim trailing ASCII blanks (0x20). In ASCII-mode compilation ' ' == 0x20,
    // which matches the post-conversion padding bytes.
+
    std::size_t trimmed_length = output.size ();
+
    while (trimmed_length > 0 && output[trimmed_length - 1] == ' ')
    {
       --trimmed_length;
    }
+
    output.resize (trimmed_length);
 }
 
 
 int zosInfo (Zos_Information &zos_information, std::string &error_message, bool areTesting)
 {
- 
-    /*
+
+   /*
     * Step 1: get the CVT pointer from PSA.flccvt.
-    * 
+    * PSA - Prefixed Save Area
     *
     */
    std::ostringstream message;
@@ -137,16 +143,17 @@ int zosInfo (Zos_Information &zos_information, std::string &error_message, bool 
    //  Note: the CVT contains a pointer to the ECVT, and a pointer to the RMCT, which in turn contains a pointer to the CCT.
    //  We will sanity check all of these.
 
-   zos_ecvt *__ptr32 ecvt_ptr = static_cast<zos_ecvt *__ptr32> (cvt_ptr->cvtecvt);
-   rmct *__ptr32 rmct_ptr = static_cast<rmct *__ptr32> (cvt_ptr->cvtopctp);
-   cct *__ptr32 cct_ptr = static_cast<cct *__ptr32> (rmct_ptr->rmctcct);
-   pccavt *__ptr32 pccavt_ptr = static_cast<pccavt *__ptr32> (cvt_ptr->cvtpccat); /* no eye catcher */
-   pcca *__ptr32 pcca_ptr = static_cast<pcca *__ptr32> (pccavt_ptr->pccat00p);    /* control block acronym in ebcdic 'PCCA' */
-   rce *__ptr32 rce_ptr = static_cast<rce *__ptr32> (cvt_ptr->cvtrcep);           /* control block acronym in ebcdic 'RCE ' */
-   csd *__ptr32 csd_ptr = static_cast<csd *__ptr32> (cvt_ptr->cvtcsd);            /* control block acronym in ebcdic 'CSD ' */
-   
-   //  At this point we have pointers to all the main control blocks we want to read. 
-   // We will validate that they look plausible before we trust them.
+   zos_ecvt *__ptr32 ecvt_ptr = static_cast<zos_ecvt *__ptr32> (cvt_ptr->cvtecvt);       // Extended Communications Vector Table
+   rmct *__ptr32 rmct_ptr = static_cast<rmct *__ptr32> (cvt_ptr->cvtopctp);              // Resource Manager Control Table
+   cct *__ptr32 cct_ptr = static_cast<cct *__ptr32> (rmct_ptr->rmctcct);                 // system resources manager cpu management control table
+   pccavt *__ptr32 pccavt_ptr = static_cast<pccavt *__ptr32> (cvt_ptr->cvtpccat);        // Physical Configuration Communication Area Vector Table
+   pcca *__ptr32 pcca_ptr = static_cast<pcca *__ptr32> (pccavt_ptr->pccat00p);           // physical configuration communication area
+   rce *__ptr32 rce_ptr = static_cast<rce *__ptr32> (cvt_ptr->cvtrcep);                  // RSM Control and Enumeration Area
+   csd *__ptr32 csd_ptr = static_cast<csd *__ptr32> (cvt_ptr->cvtcsd);                   // common system data area
+
+
+   // If we're in testing mode, display the pointers we just read and the sizes of the blocks they point to, so we can verify that our offsets and
+   // lengths match reality.
 
    if (areTesting)
    {
@@ -199,7 +206,10 @@ int zosInfo (Zos_Information &zos_information, std::string &error_message, bool 
       std::cout << std::endl;
    }
 
-   //  Validate that the pointers we just read from the CVT look plausible (non-null and point to blocks with the expected eye-catchers).
+   // At this point we have pointers to all the main control blocks we want to read.
+   // We will validate that they look plausible before we trust them.
+   // Validate that the pointers we just read from the CVT look plausible (non-null and point to blocks with the expected eye-catchers).
+
    auto validate_pointer = [&message, &error_message] (const void *ptr, const char *block_name, const char *pointer_name) -> bool
    {
       if (ptr == nullptr)
@@ -218,11 +228,11 @@ int zosInfo (Zos_Information &zos_information, std::string &error_message, bool 
 
    // Helper to validate that a pointer is non-null and that the block it points to starts with the expected eye-catcher bytes.
    auto validate_eyecatcher = [&message, &error_message, areTesting] (const void *ptr,
-                                                                   const unsigned char *actual,
-                                                                   const unsigned char *expected,
-                                                                   std::size_t length,
-                                                                   const char *block_name,
-                                                                   const char *pointer_name) -> bool
+                                                                      const unsigned char *actual,
+                                                                      const unsigned char *expected,
+                                                                      std::size_t length,
+                                                                      const char *block_name,
+                                                                      const char *pointer_name) -> bool
    {
       if (ptr == nullptr)
       {
@@ -264,6 +274,7 @@ int zosInfo (Zos_Information &zos_information, std::string &error_message, bool 
 
       return true;
    };
+
    /////////////////////////////////////////////////////////////////
 
 
@@ -280,7 +291,7 @@ int zosInfo (Zos_Information &zos_information, std::string &error_message, bool 
    int cvtrlstg = cvt_ptr->cvtrlstg;       //  size of actual real storage online - KB
 
    /*
-    * Step 3: sanity check the ECVT acronym. The first 4 bytes of the
+    * Step 3: sanity check the ECVT acronym. The first 4 bytes of the dsect
     */
    if (!validate_eyecatcher (ecvt_ptr, ecvt_ptr->ecvtecvt, ECVT_ACRONYM, 4, "ECVT", "CVTECVT"))
    {
@@ -288,7 +299,7 @@ int zosInfo (Zos_Information &zos_information, std::string &error_message, bool 
    }
 
    /*
-    * Step 4: sanity check the RMCT acronym. The first 4 bytes of the
+    * Step 4: sanity check the RMCT acronym. The first 4 bytes of the dsect
     */
    if (!validate_eyecatcher (rmct_ptr, rmct_ptr->rmctname, RMCT_ACRONYM, 4, "RMCT", "CVTOPCTP"))
    {
@@ -296,15 +307,16 @@ int zosInfo (Zos_Information &zos_information, std::string &error_message, bool 
    }
 
    /*
-    * Step 5: sanity check the CCT acronym. The first 4 bytes of the
+    * Step 5: sanity check the CCT acronym. The first 4 bytes of the dsect
     */
    if (!validate_eyecatcher (cct_ptr, cct_ptr->cctcct, CCT_ACRONYM, 4, "CCT", "RMCTCCT"))
    {
       return -1;
    }
+
    /*
     * Step 6: sanity check the pointer to the PCCAVT.
-    * The  PCCAVT does not have an eye-catcher, but we can at least check that the pointer is non-null and points to a plausible block of
+    * The PCCAVT does not have an eye-catcher, but we can at least check that the pointer is non-null and points to a plausible block of
     * memory before we dereference it to get the PCCA pointer and check the PCCA eye-catcher.
     * Physical Configuration Communication Area Vector Table (PCCAVT) is an array of pointers to PCCAs, one per CPU. The CVT has a pointer to the
     * start of the PCCAVT array, and the first entry (for CPU 0).

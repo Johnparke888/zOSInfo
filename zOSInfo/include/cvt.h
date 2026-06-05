@@ -2,7 +2,7 @@
 
 /*
  *
- * Common name:Communications Vector Table
+ * Common name: Communications Vector Table
  * Macro ID: CVT
  * DSECT name: CVT
  * Eye-catcher ID:CVT

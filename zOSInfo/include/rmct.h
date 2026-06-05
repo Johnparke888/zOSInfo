@@ -1,7 +1,7 @@
 #pragma once 
 /*
 * 
-* Descriptive Name:  System resources manager control table
+* Descriptive Name: System resources manager control table
 * Macro ID:IRARMCT
 * DSECT name:RMCT
 * Eye-catcher ID: RMCT

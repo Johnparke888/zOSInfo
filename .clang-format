@@ -1,0 +1,93 @@
+# Format Style Options - Created with Clang Power Tools
+---
+AccessModifierOffset: 0
+AlignTrailingComments: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBraces: Custom
+BraceWrapping: 
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: false
+  AfterStruct: true
+  AfterUnion: false
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody : true
+  IndentBraces: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: false
+  BeforeWhile: false
+
+ColumnLimit: 150
+ContinuationIndentWidth: 4
+DeriveLineEnding: true
+IndentCaseBlocks: false
+IndentCaseLabels: true
+IndentWidth: 3
+LineEnding: LF
+MaxEmptyLinesToKeep: 5
+InsertBraces : true
+InsertNewlineAtEOF : true
+
+AlignConsecutiveShortCaseStatements:
+  Enabled: false
+  AcrossEmptyLines: false
+  AcrossComments: false
+  AlignCaseColons: false
+NamespaceIndentation : All
+
+RawStringFormats: 
+  - Language: Cpp
+    Delimiters:
+    - cc
+    - CC
+    - cpp
+    - Cpp
+    - CPP
+    - 'c++'
+    - 'C++'
+    CanonicalDelimiter: ''
+    BasedOnStyle: custom
+  - Language: TextProto
+    Delimiters:
+    - pb
+    - PB
+    - proto
+    - PROTO
+    EnclosingFunctions:
+    - EqualsProto
+    - EquivToProto
+    - PARSE_PARTIAL_TEXT_PROTO
+    - PARSE_TEST_PROTO
+    - PARSE_TEXT_PROTO
+    - ParseTextOrDie
+    - ParseTextProtoOrDie
+    - ParseTestProto
+    - ParsePartialTestProto
+    CanonicalDelimiter: ''
+    BasedOnStyle: custom
+SortIncludes: false
+SpaceAfterCStyleCast: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: false
+SpaceBeforeParens: Always
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyBlock: true
+SpacesBeforeTrailingComments: 7
+Standard: c++20
+UseTab: Never
+...

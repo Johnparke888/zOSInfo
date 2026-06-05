@@ -32,7 +32,7 @@ normal configurations.
 
 ## Example Output
 
-```
+
 
 System Name: ZAL1
 Sysplex Name: ADCDPL
@@ -50,7 +50,7 @@ Real Storage (MB): 32768
 Number of regular CPUs: 2
 Number of specialty CPUs: 1
 
-````
+
 
 ---
 
@@ -61,10 +61,10 @@ Number of specialty CPUs: 1
 - **Sysplex ID** – 2-character unique identifier of a sysplex  
 - **Product Owner** – Typically "IBM CORP"  
 - **Product Name** – IBM operating system name  
-- **Product Version** – Format: `version.release.modification`  
+- **Product Version** – Format: version.release.modification  
   - **Version** – Major generation of the operating system architecture  
   - **Release** – Feature update within that version  
-  - **Modification Level** – Maintenance or patch level (`00` = base release)  
+  - **Modification Level** – Maintenance or patch level (00 = base release)  
 - **CPU Model Number** – IBM server Machine Type (CPC type)  
 - **CPU Serial Number** – Processor serial number  
 - **Real Storage (MB)** – Total physical memory in MB  
@@ -82,16 +82,15 @@ extract system-level information.
 
 ### Control Blocks Used
 
-- `cct.h`
-- `cda.h`
-- `csd.h`
-- `cvt.h`
-- `ecvt.h`
-- `pcca.h`
-- `pccavt.h`
-- `psa.h`
-- `rce.h`
-- `rmct.h`
+- cct.h     system resources manager cpu management control table
+- csd.h     common system data area
+- cvt.h     Communications Vector Table
+- ecvt.h    Extended Communications Vector Table
+- pcca.h    physical configuration communication area
+- pccavt.h  Physical Configuration Communication Area Vector Table
+- psa.h     prefixed save area
+- rce.h     RSM Control and Enumeration Area
+- rmct.h    System resources manager control table
 
 ### Notes
 
@@ -110,20 +109,20 @@ extract system-level information.
 
 ## Project Structure
 
-- `zosInfo.cpp`        – Main implementation  
-- `zosInfoTest.cpp`    – Test program  
-- `Makefile`           – Build script  
-- `Makefile-Test`      – Test build script  
-- `*.h`                – Control block mappings  
+- zosInfo.cpp        – Main implementation  
+- zosInfoTest.cpp    – Test program  
+- Makefile           – Build script  
+- Makefile-Test      – Test build script  
+- *.h                – Control block mappings  
 
 ---
 
 ## Build Instructions
 
-```sh
+sh
 cd zOSInfo
 gmake
-````
+
 
 ---
 
@@ -133,13 +132,13 @@ This library is intended to be used within C++ applications.
 
 ### Include Header
 
-```cpp
+cpp
 #include "zosInfo.h"
-```
+
 
 ### Example Code
 
-```cpp
+cpp
 Zos_Information zos_information;
 std::string error_message;
 bool areTesting = false;
@@ -153,9 +152,9 @@ if (result != 0)
 }
 
 std::cout << zos_information.to_string() << std::endl;
-```
 
-A complete usage example is available in `zosInfoTest.cpp`.
+
+A complete usage example is available in zosInfoTest.cpp.
 
 ---
 
@@ -165,11 +164,11 @@ A test program is provided to demonstrate usage.
 
 ### Build and Run Test
 
-```sh
+sh
 cd zOSInfo
 gmake --file=Makefile-Test
 ./zosInfoTest
-```
+
 
 ---
 
