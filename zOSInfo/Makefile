@@ -19,6 +19,7 @@ CXXFLAGS += -O3 -std=gnu++20 -fzos-le-char-mode=ascii $(INCLUDE)
 DESTDIR ?= /usr/local
 INCDIR  = $(DESTDIR)/include
 LIBDIR  = $(DESTDIR)/lib
+BINDIR  = $(DESTDIR)/bin
 
 # List every public header you want installed.
 HEADERS = include/zosInfo.h include/zosinfo-version.h
@@ -39,7 +40,7 @@ install: $(STATICLIB)
 	mkdir -p $(LIBDIR) $(INCDIR)
 	cp $(STATICLIB) $(LIBDIR)/
 	cp $(HEADERS) $(INCDIR)/
-
+	mkdir -p $(BINDIR)
 clean::
 	$(RM) $(CXXOBJECTS) $(STATICLIB)
 
