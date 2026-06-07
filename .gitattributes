@@ -1,0 +1,8 @@
+*	text	working-tree-encoding=ISO8859-1
+
+.gitattributes git-encoding=ISO8859-1 zos-working-tree-encoding=iso8859-1
+.gitignore git-encoding=iso8859-1 zos-working-tree-encoding=iso8859-1
+*.gz  binary
+*.tar binary
+*.tgz binary
+*.zip binary

@@ -12,9 +12,9 @@ $(info $(Machine))
 # *******************************************************
 
 CXXFLAGS+=-O2 -std=gnu++20 -fzos-le-char-mode=ascii $(INCLUDE)
-CC=/usr/lpp/IBM/cnw/openxl/bin/ibm-clang64
-CXX=/usr/lpp/IBM/cnw/openxl/bin/ibm-clang++64
-LD=/usr/lpp/IBM/cnw/openxl/bin/ibm-clang++64
+CC=ibm-clang64
+CXX=ibm-clang++64
+LD=ibm-clang++64
 
 INCLUDE+=-I. -I/usr/local/include  -I/usr/include 
 
