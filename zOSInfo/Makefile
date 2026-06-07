@@ -13,13 +13,12 @@ CXX ?= ibm-clang++64
 AR  ?= ar
 
 INCLUDE += -I. -I./include -I/usr/local/include -I/usr/include
-CXXFLAGS += -O2 -std=gnu++20 -fzos-le-char-mode=ascii $(INCLUDE)
+CXXFLAGS += -O3 -std=gnu++20 -fzos-le-char-mode=ascii $(INCLUDE)
 
-PREFIX ?= /usr/local
-DESTDIR ?=
 # Install layout. zopen passes DESTDIR (the prefix, e.g. .../prod/zosinfo).
-INCDIR = $(DESTDIR)/$(PREFIX)/include
-LIBDIR = $(DESTDIR)/$(PREFIX)/lib
+DESTDIR ?= /usr/local
+INCDIR  = $(DESTDIR)/include
+LIBDIR  = $(DESTDIR)/lib
 
 # List every public header you want installed.
 HEADERS = include/zosInfo.h include/zosinfo-version.h
@@ -34,12 +33,13 @@ $(STATICLIB): $(CXXOBJECTS)
 
 # Explicit compile rule so zopen's CXX/CXXFLAGS are honored.
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 install: $(STATICLIB)
-	mkdir -p "$(LIBDIR)" "$(INCDIR)"
-	cp "$(STATICLIB)" "$(LIBDIR)/"
-	cp $(HEADERS) "$(INCDIR)/"
+	mkdir -p $(LIBDIR) $(INCDIR)
+	cp $(STATICLIB) $(LIBDIR)/
+	cp $(HEADERS) $(INCDIR)/
+
 clean::
 	$(RM) $(CXXOBJECTS) $(STATICLIB)
 
