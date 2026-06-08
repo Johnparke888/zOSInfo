@@ -115,7 +115,7 @@ struct Zos_Information
       std::ostringstream oss;
       oss << "System Name: " << system_name << "\n"
           << "Sysplex Name: " << sysplex_name << "\n"
-          << "Sysplex ID: " << sysplex_id << "\n"
+          << "Sysplex Id: " << sysplex_id << "\n"
           << "Product Owner: " << product_owner << "\n"
           << "Product Name: " << product_name << "\n"
           << "Product Version: " << product_version << "\n"
@@ -123,7 +123,7 @@ struct Zos_Information
           << "CPU Serial Number: " << cpu_serial_number << "\n"
           << "Version Code: " << version_code << "\n"
           << "Logical Partition Identifier: " << logical_partition_identifier << "\n"
-          << "Number of CPUs: " << number_of_cpus << "\n"
+          << "Number of CPU's: " << number_of_cpus << "\n"
           << "Number of 4K Frames: " << number_of_frames << "\n"
           << "Real Storage (MB): " << real_storage_mbytes << "\n"
           << "Number of regular CPU's: " << number_regular_cpus << "\n"
