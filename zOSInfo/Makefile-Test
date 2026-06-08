@@ -5,13 +5,13 @@ CC=ibm-clang64
 CXX=ibm-clang++64
 LD=ibm-clang++64
 
-INCLUDE+=-I. -Iinclude -I/usr/local/include  -I/usr/include 
+INCLUDE+=-I. -I./include -I/usr/local/include -I/usr/include 
 
 CXXSOURCES = zosInfoTest.cpp zosInfo.cpp
 CXXOBJECTS = $(CXXSOURCES:.cpp=.o)  
 
 $(CXX_PROG): $(CXXOBJECTS)
-	$(CXX) -o $@ $(CXXOBJECTS) 
+	$(CXX) $(INCLUDE) -o $@ $(CXXOBJECTS) 
 
 check:: $(CXX_PROG)
 	-./$(CXX_PROG)
