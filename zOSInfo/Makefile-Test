@@ -1,24 +1,22 @@
 CXX_PROG=zosInfoTest
-
-CXXFLAGS+=-O3 -std=gnu++20 -fzos-le-char-mode=ascii $(INCLUDE)
 CC=ibm-clang64
 CXX=ibm-clang++64
 LD=ibm-clang++64
-
-INCLUDE+=-I. -I./include -I/usr/local/include -I/usr/include 
-
+INCLUDE+=-I. -I./include -I/usr/local/include -I/usr/include
+CXXFLAGS+=-O3 -std=gnu++20 -fzos-le-char-mode=ascii
 CXXSOURCES = zosInfoTest.cpp zosInfo.cpp
-CXXOBJECTS = $(CXXSOURCES:.cpp=.o)  
+CXXOBJECTS = $(CXXSOURCES:.cpp=.o)
+
+%.o: %.cpp
+	$(CXX) $(INCLUDE) $(CXXFLAGS) -c -o $@ $<
 
 $(CXX_PROG): $(CXXOBJECTS)
-	$(CXX) $(INCLUDE) -o $@ $(CXXOBJECTS) 
+	$(CXX) -o $@ $(CXXOBJECTS)
 
 check:: $(CXX_PROG)
 	-./$(CXX_PROG)
 
-all:: clean $(CXX_PROG) 
-	
+all:: clean $(CXX_PROG)
 clean::
-	$(RM) $(CXXOBJECTS) $(CXX_PROG) 
-
+	$(RM) $(CXXOBJECTS) $(CXX_PROG)
 ship:: all
